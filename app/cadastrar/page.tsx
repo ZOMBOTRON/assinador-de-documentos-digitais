@@ -1,10 +1,12 @@
-import Link from 'next/link';
-
-export default function Home() {
+export default function CadastrarUsuario() {
   return (
-    <main className="w-screen h-screen flex justify-center items-center flex-col">
-      <h1>Login</h1>
+    <div>
+      <h1>Cadastro</h1>
       <form action="" className="flex justify-center flex-col">
+        <label htmlFor="nome">
+          Nome:
+          <input type="nome" name="nome" id="nome" />
+        </label>
         <label htmlFor="email">
           Email:
           <input type="email" name="email" id="email" />
@@ -13,9 +15,8 @@ export default function Home() {
           Senha:
           <input type="password" name="senha" id="senha" />
         </label>
-        <button>Entrar</button>
+        <button>Criar conta</button>
       </form>
-      <Link href="./cadastrar">Cadastrar conta</Link>
-    </main>
+    </div>
   );
 }

@@ -1,0 +1,41 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String       @id @default(cuid())
+  name       String
+  email      String       @unique
+  password   String
+  chaves     Chaves[]
+  documentos Documentos[]
+}
+
+// Usuário deve conseguir gerar um par de chaves assimétricas (seu sistema deve armazenar as chaves);
+
+model Chaves {
+  id           String @id @default(cuid())
+  chavePrivada String
+  chavePublica String
+  user         User   @relation(fields: [userId], references: [id])
+  userId       String
+}
+
+// Usuário deve conseguir salvar documento;
+
+model Documentos {
+  id         String  @id @default(cuid())
+  nome       String
+  descricao  String
+  assinatura String?
+  user       User    @relation(fields: [userId], references: [id])
+  userId     String
+}
