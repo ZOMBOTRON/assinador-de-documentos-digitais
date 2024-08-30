@@ -12,9 +12,9 @@ datasource db {
 
 model User {
   id         String       @id @default(cuid())
-  name       String
+  nome       String
   email      String       @unique
-  password   String
+  senha      String
   chaves     Chaves[]
   documentos Documentos[]
 }
