@@ -10,6 +10,24 @@ import { revalidatePath } from 'next/cache';
 
 const secretKey = env.SECRET_KEY as string;
 
+const crypto = require('node:crypto');
+
+// Geração de chaves RSA
+function gerarChavesRSA() {
+  const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
+    modulusLength: 2048,
+    publicKeyEncoding: {
+      type: 'spki',
+      format: 'pem',
+    },
+    privateKeyEncoding: {
+      type: 'pkcs8',
+      format: 'pem',
+    },
+  });
+  return { publicKey, privateKey };
+}
+
 function gerarToken(usuario: Usuario & { id: string }) {
   const payload = {
     id: usuario.id,
@@ -30,11 +48,14 @@ export async function cadastrarUsuario({ nome, email, senha }: Usuario) {
       },
     });
     if (!usuario) return;
-    await prisma.chaves.create({
+    const { publicKey, privateKey } = gerarChavesRSA();
+    await prisma.user.update({
       data: {
-        chavePrivada: '1',
-        chavePublica: '1',
-        userId: usuario.id,
+        chavePrivada: privateKey,
+        chavePublica: publicKey,
+      },
+      where: {
+        id: usuario.id,
       },
     });
     const token = gerarToken(usuario);

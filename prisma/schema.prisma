@@ -16,8 +16,8 @@ model User {
   nome         String
   email        String       @unique
   senha        String
-  chavePrivada String
-  chavePublica String
+  chavePrivada String?
+  chavePublica String?
   documentos   Documentos[]
 }
 

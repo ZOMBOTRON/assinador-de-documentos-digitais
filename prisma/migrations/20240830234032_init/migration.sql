@@ -3,16 +3,9 @@ CREATE TABLE "User" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "nome" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "senha" TEXT NOT NULL
-);
-
--- CreateTable
-CREATE TABLE "Chaves" (
-    "id" TEXT NOT NULL PRIMARY KEY,
-    "chavePrivada" TEXT NOT NULL,
-    "chavePublica" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-    CONSTRAINT "Chaves_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+    "senha" TEXT NOT NULL,
+    "chavePrivada" TEXT,
+    "chavePublica" TEXT
 );
 
 -- CreateTable
