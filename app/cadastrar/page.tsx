@@ -13,18 +13,7 @@ export default function CadastrarUsuario() {
       return '';
     }
 
-    const usuario = await cadastrarUsuario({ nome, email, senha });
-    if (usuario?.id) {
-      console.log('Usuário cadastrado com sucesso!');
-      console.log(usuario);
-      alert('Usuário cadastrado com sucesso!');
-      return '';
-    }
-    if (usuario?.error) {
-      console.log(usuario.error);
-      alert(usuario.error);
-      return '';
-    }
+    await cadastrarUsuario({ nome, email, senha });
   };
   return (
     <>
