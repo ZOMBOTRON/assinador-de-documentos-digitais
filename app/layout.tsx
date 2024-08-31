@@ -22,7 +22,7 @@ export default function RootLayout({
       <body
         className={
           inter.className +
-          ' flex justify-center flex-col items-center w-screen h-screen'
+          ' flex justify-center flex-col items-center w-screen h-screen p-5'
         }
       >
         {children}

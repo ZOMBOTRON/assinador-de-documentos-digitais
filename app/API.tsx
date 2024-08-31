@@ -94,3 +94,19 @@ export async function loginUsuario({
   revalidatePath('/home');
   redirect('/home');
 }
+
+export async function getDocumentos() {
+  const documentos = await prisma.documentos.findMany();
+  const criador = await prisma.user.findFirst({
+    where: {
+      id: documentos[0].userId,
+    },
+  });
+  return documentos.map((documento) => ({
+    id: documento.id,
+    nome: documento.nome,
+    descricao: documento.descricao,
+    assinatura: documento.assinatura,
+    criador: criador?.nome,
+  }));
+}
