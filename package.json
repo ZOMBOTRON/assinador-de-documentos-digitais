@@ -9,9 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "assinador-de-documentos-digitais": "file:",
     "next": "14.2.6",
     "react": "^18",
     "react-dom": "^18",
+    "react-router-dom": "^6.26.1",
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {
