@@ -97,16 +97,24 @@ export async function loginUsuario({
 
 export async function getDocumentos() {
   const documentos = await prisma.documentos.findMany();
-  const criador = await prisma.user.findFirst({
-    where: {
-      id: documentos[0].userId,
-    },
-  });
-  return documentos.map((documento) => ({
-    id: documento.id,
-    nome: documento.nome,
-    descricao: documento.descricao,
-    assinatura: documento.assinatura,
-    criador: criador?.nome,
-  }));
+
+  const documentosComCriador = await Promise.all(
+    documentos.map(async (documento) => {
+      const criador = await prisma.user.findFirst({
+        where: {
+          id: documento.userId, // Corrigi a referência do userId para usar o documento atual.
+        },
+      });
+
+      return {
+        id: documento.id,
+        nome: documento.nome,
+        descricao: documento.descricao,
+        assinatura: documento.assinatura,
+        criador: criador?.nome,
+      };
+    }),
+  );
+
+  return documentosComCriador;
 }

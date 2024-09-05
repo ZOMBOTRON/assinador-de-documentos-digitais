@@ -2,12 +2,13 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { getDocumentos } from '../API';
+import { Documento } from '../API.d';
 
 export default function Home() {
-  const [documentos, setDocumentos] = useState([]);
+  const [documentos, setDocumentos] = useState([] as Documento[]);
   useEffect(() => {
     getDocumentos().then((documentos) => setDocumentos(documentos));
-  }, [documentos]);
+  }, []);
 
   return (
     <div style={styles.container}>
