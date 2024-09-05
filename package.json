@@ -9,7 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+<<<<<<< HEAD
     "assinador-de-documentos-digitais": "file:",
+=======
+    "@prisma/client": "^5.19.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+>>>>>>> 5b7443bdbb4ea71675ac437cf2937e36aa42070d
     "next": "14.2.6",
     "react": "^18",
     "react-dom": "^18",
@@ -17,14 +23,16 @@
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {
-    "@types/node": "^20",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/node": "^20.16.2",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.2.6",
     "postcss": "^8",
-    "prisma": "^5.18.0",
+    "prisma": "^5.19.0",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
   }
 }

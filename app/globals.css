@@ -1,3 +1,79 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+	font-family: Arial, sans-serif;
+	background-color: #f0f0f0;
+	color: #333;
+	line-height: 1.6;
+}
+
+/* Estilo para cabeçalhos */
+h1, h2, h3, h4, h5, h6 {
+	color: #444;
+	margin-bottom: 10px;
+}
+
+/* Estilo para parágrafos */
+p {
+	margin-bottom: 15px;
+}
+
+/* Estilo para links */
+a {
+	color: #007BFF;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+/* Estilo para botões */
+button {
+	background-color: #007BFF;
+	color: white;
+	border: none;
+	padding: 10px 15px;
+	cursor: pointer;
+	border-radius: 3px;
+}
+
+button:hover {
+	background-color: #0056b3;
+}
+
+/* Estilo para inputs de texto */
+input[type="text"], input[type="email"], input[type="password"], textarea {
+	display: block;
+	padding: 10px;
+	margin-bottom: 15px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+
+/* Estilo para inputs de botão */
+input[type="submit"] {
+	background-color: #007BFF;
+	color: white;
+	border: none;
+	padding: 10px 15px;
+	cursor: pointer;
+	border-radius: 3px;
+}
+
+input[type="submit"]:hover {
+	background-color: #0056b3;
+}
+
+/* Estilo para listas */
+ul {
+	list-style-type: disc;
+	margin-left: 20px;
+}
+
+ol {
+	list-style-type: decimal;
+	margin-left: 20px;
+}
