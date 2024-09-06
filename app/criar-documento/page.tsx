@@ -27,7 +27,7 @@ export default function CriarDocumento() {
 
   return (
     <div className="flex flex-col justify-center items-center w-screen h-screen">
-      <h1>Formulario para criar um documento</h1>
+      <h1 className="text-xl">Formulario para criar um documento</h1>
       <form onSubmit={handleSubmit} className="flex flex-col">
         <label htmlFor="nome">
           Nome:
