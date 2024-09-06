@@ -1,14 +1,31 @@
 'use client';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { getDocumentos } from '../API';
+import { getDocumentos, verificarAssinatura } from '../API';
 import { Documento } from '../API.d';
 
 export default function Home() {
-  const [documentos, setDocumentos] = useState([] as Documento[]);
+  const [documentos, setDocumentos] = useState<Documento[]>([]);
+  const [verificacao, setVerificacao] = useState<Record<string, string>>({});
+
   useEffect(() => {
     getDocumentos().then((documentos) => setDocumentos(documentos));
   }, []);
+
+  const handleVerificar = async (documento: Documento) => {
+    try {
+      const resultado = await verificarAssinatura(documento);
+      setVerificacao((prev) => ({
+        ...prev,
+        [documento.id]: resultado ? 'Documento validado com sucesso.' : 'Falha na validação do documento.'
+      }));
+    } catch (error) {
+      setVerificacao((prev) => ({
+        ...prev,
+        [documento.id]: 'Erro ao verificar o documento.'
+      }));
+    }
+  };
 
   return (
     <div style={styles.container}>
@@ -17,17 +34,25 @@ export default function Home() {
       </Link>
       <h1 style={styles.header}>Lista de documentos assinados</h1>
       <ul style={styles.list}>
-        {documentos?.map((documento, index) => (
-          <li key={index} style={styles.listItem}>
+        {documentos?.map((documento) => (
+          <li key={documento.id} style={styles.listItem}>
             <h2 style={styles.documentTitle}>{documento.nome}</h2>
             <p style={styles.documentText}>{documento.descricao}</p>
-            <p style={styles.documentSignature}>{documento.assinatura}</p>
+            <p style={styles.documentCreator}>Criador: {documento.criador}</p>
+            <button
+              onClick={() => handleVerificar(documento)}
+              style={styles.verifyButton}
+            >
+              Verificar Assinatura
+            </button>
+            {verificacao[documento.id] && <p>{verificacao[documento.id]}</p>}
           </li>
         ))}
       </ul>
     </div>
   );
 }
+
 
 const styles = {
   container: {
@@ -82,5 +107,21 @@ const styles = {
     fontSize: '14px',
     color: '#777',
     fontStyle: 'italic',
+  },
+  documentCreator: {
+    fontSize: '14px',
+    color: '#333',
+    fontStyle: 'italic',
+    marginBottom: '10px',
+  },
+  verifyButton: {
+    marginTop: '10px',
+    backgroundColor: '#28a745',
+    color: 'white',
+    border: 'none',
+    padding: '10px 15px',
+    cursor: 'pointer',
+    borderRadius: '4px',
+    transition: 'background-color 0.3s',
   },
 };

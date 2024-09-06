@@ -1,22 +1,57 @@
+'use client';
+import { useState } from 'react';
+import { salvarESignarDocumento } from '../API';
+import { useRouter } from 'next/navigation';
+
 export default function CriarDocumento() {
+  const [nome, setNome] = useState('');
+  const [descricao, setDescricao] = useState('');
+  const [error, setError] = useState('');
+  const router = useRouter();
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    if (!nome || !descricao) {
+      setError('Preencha todos os campos!');
+      return;
+    }
+
+    try {
+      await salvarESignarDocumento(nome, descricao);
+      router.push('/home'); 
+    } catch (err) {
+      setError('Erro ao salvar o documento!');
+    }
+  };
+
   return (
     <div>
       <h1>Formulario para criar um documento</h1>
-      <form action="" method="post" className="flex flex-col">
+      <form onSubmit={handleSubmit} className="flex flex-col">
         <label htmlFor="nome">
           Nome:
-          <input type="text" name="nome" id="nome" />
+          <input
+            type="text"
+            name="nome"
+            id="nome"
+            value={nome}
+            onChange={(e) => setNome(e.target.value)}
+          />
         </label>
-        <label htmlFor="descricao" className="flex flex-col">
+        <label htmlFor="descricao">
           Descrição:
           <textarea
             name="descricao"
             id="descricao"
             cols={30}
             rows={10}
+            value={descricao}
+            onChange={(e) => setDescricao(e.target.value)}
           ></textarea>
         </label>
-        <button type="submit">Salvar documento</button>
+        {error && <p>{error}</p>}
+        <button type="submit">Salvar e Assinar Documento</button>
       </form>
     </div>
   );

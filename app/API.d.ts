@@ -9,5 +9,6 @@ export interface Documento {
   nome: string;
   descricao: string;
   assinatura: string;
+  userId: string;
   criador?: string;
 }

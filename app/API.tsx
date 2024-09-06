@@ -3,10 +3,11 @@
 import prisma from '@/prisma/prisma';
 import jwt from 'jsonwebtoken';
 import { env } from 'process';
-import { Usuario } from './API.d';
+import { Usuario, Documento } from './API.d';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
+import { obterIdUsuario } from './utils/auth';
 
 const secretKey = env.SECRET_KEY as string;
 
@@ -95,14 +96,14 @@ export async function loginUsuario({
   redirect('/home');
 }
 
-export async function getDocumentos() {
+export async function getDocumentos(): Promise<Documento[]> {
   const documentos = await prisma.documentos.findMany();
 
   const documentosComCriador = await Promise.all(
     documentos.map(async (documento) => {
       const criador = await prisma.user.findFirst({
         where: {
-          id: documento.userId, // Corrigi a referência do userId para usar o documento atual.
+          id: documento.userId,
         },
       });
 
@@ -112,9 +113,81 @@ export async function getDocumentos() {
         descricao: documento.descricao,
         assinatura: documento.assinatura,
         criador: criador?.nome,
+        userId: documento.userId,
       };
     }),
   );
 
   return documentosComCriador;
+}
+
+// Função para gerar assinatura digital
+async function gerarAssinatura(titulo: string, texto: string, chavePrivada: string) {
+  const dados = `${titulo}\n${texto}`;
+  
+  const hash = crypto.createHash('sha256').update(dados).digest();
+  
+  const sign = crypto.createSign('SHA256');
+  sign.update(hash);
+  sign.end();
+  
+  return sign.sign(chavePrivada, 'base64'); // Convertendo para base64 para armazenar
+}
+
+export async function salvarESignarDocumento(nome: string, descricao: string) {
+  const cookieStore = cookies();
+  const token = cookieStore.get('token')?.value;
+  
+  if (!token) {
+    throw new Error('Usuário não autenticado.');
+  }
+  
+  const usuarioId = obterIdUsuario(token);
+  
+  if (!usuarioId) {
+    throw new Error('ID do usuário não encontrado.');
+  }
+  
+  const usuario = await prisma.user.findUnique({ where: { id: usuarioId } });
+  
+  if (!usuario || !usuario.chavePrivada) {
+    throw new Error('Usuário não encontrado ou chave privada ausente.');
+  }
+  
+  const assinatura = await gerarAssinatura(nome, descricao, usuario.chavePrivada);
+  
+  const documento = await prisma.documentos.create({
+    data: {
+      nome,
+      descricao,
+      assinatura,
+      userId: usuarioId,
+    },
+  });
+  
+  return documento;
+}
+
+// Função para verificar a assinatura de um documento
+export async function verificarAssinatura(documento: Documento) {
+  const usuario = await prisma.user.findUnique({
+    where: { id: documento.userId },
+  });
+
+  if (!usuario || !usuario.chavePublica) {
+    throw new Error('Usuário não encontrado ou chave pública ausente.');
+  }
+
+  const assinatura = Buffer.from(documento.assinatura, 'base64');
+
+  const dados = `${documento.nome}${documento.descricao}`;
+  const hash = crypto.createHash('sha256').update(dados).digest();
+
+  const verify = crypto.createVerify('SHA256');
+  verify.update(hash);
+  verify.end();
+
+  const isValid = verify.verify(usuario.chavePublica, assinatura, 'base64');
+
+  return isValid;
 }
