@@ -22,7 +22,7 @@ export default function Home() {
   };
   return (
     <main className="w-screen h-screen flex justify-center items-center flex-col">
-      <h1>Login</h1>
+      <h1 className="text-xl">Login</h1>
       <form action={handleSubmit} className="flex justify-center flex-col">
         <label htmlFor="email">
           Email:

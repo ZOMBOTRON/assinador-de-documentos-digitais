@@ -16,7 +16,7 @@ export default function CadastrarUsuario() {
     await cadastrarUsuario({ nome, email, senha });
   };
   return (
-    <>
+    <div className="flex flex-col justify-center items-center w-screen h-screen">
       <h1>Cadastro</h1>
       <form action={handleSubmit} className="flex justify-center flex-col">
         <label htmlFor="nome">
@@ -33,6 +33,6 @@ export default function CadastrarUsuario() {
         </label>
         <button className="">Criar conta</button>
       </form>
-    </>
+    </div>
   );
 }
