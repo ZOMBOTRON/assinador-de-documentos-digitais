@@ -17,26 +17,30 @@ export default function Home() {
       const resultado = await verificarAssinatura(documento);
       setVerificacao((prev) => ({
         ...prev,
-        [documento.id]: resultado ? 'Documento validado com sucesso.' : 'Falha na validação do documento.'
+        [documento.id]: resultado
+          ? 'Documento validado com sucesso.'
+          : 'Falha na validação do documento.',
       }));
     } catch (error) {
       setVerificacao((prev) => ({
         ...prev,
-        [documento.id]: 'Erro ao verificar o documento.'
+        [documento.id]: 'Erro ao verificar o documento.',
       }));
     }
   };
 
   return (
     <div style={styles.container}>
-      <Link href="./../documento" style={styles.link}>
+      <Link href="/criar-documento" style={styles.link}>
         Criar Documento
       </Link>
       <h1 style={styles.header}>Lista de documentos assinados</h1>
       <ul style={styles.list}>
         {documentos?.map((documento) => (
           <li key={documento.id} style={styles.listItem}>
-            <h2 style={styles.documentTitle}>{documento.nome}</h2>
+            <Link href={`/${documento.id}`}>
+              <h2 style={styles.documentTitle}>{documento.nome}</h2>
+            </Link>
             <p style={styles.documentText}>{documento.descricao}</p>
             <p style={styles.documentCreator}>Criador: {documento.criador}</p>
             <button
@@ -52,7 +56,6 @@ export default function Home() {
     </div>
   );
 }
-
 
 const styles = {
   container: {
@@ -74,9 +77,6 @@ const styles = {
     borderRadius: '4px',
     transition: 'background-color 0.3s',
   },
-  linkHover: {
-    backgroundColor: '#0056b3',
-  },
   header: {
     fontSize: '24px',
     marginBottom: '20px',
@@ -97,16 +97,12 @@ const styles = {
     fontSize: '20px',
     marginBottom: '10px',
     color: '#007BFF',
+    cursor: 'pointer',
   },
   documentText: {
     fontSize: '16px',
     marginBottom: '5px',
     color: '#555',
-  },
-  documentSignature: {
-    fontSize: '14px',
-    color: '#777',
-    fontStyle: 'italic',
   },
   documentCreator: {
     fontSize: '14px',

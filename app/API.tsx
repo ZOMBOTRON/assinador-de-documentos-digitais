@@ -115,6 +115,33 @@ export async function loginUsuario({
   redirect('/home');
 }
 
+export async function getDocumento(id: string) {
+  const documento = await prisma.documentos.findFirst({
+    where: {
+      id,
+    },
+  });
+
+  if (!documento) {
+    throw new Error('Documento não encontrado.');
+  }
+
+  const criador = await prisma.user.findFirst({
+    where: {
+      id: documento.userId,
+    },
+  });
+
+  return {
+    id: documento.id,
+    nome: documento.nome,
+    descricao: documento.descricao,
+    assinatura: documento.assinatura,
+    criador: criador?.nome,
+    userId: documento.userId,
+  };
+}
+
 export async function getDocumentos(): Promise<Documento[]> {
   const documentos = await prisma.documentos.findMany();
 

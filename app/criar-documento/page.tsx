@@ -19,14 +19,14 @@ export default function CriarDocumento() {
 
     try {
       await salvarESignarDocumento(nome, descricao);
-      router.push('/home'); 
+      router.push('/home');
     } catch (err) {
       setError('Erro ao salvar o documento!');
     }
   };
 
   return (
-    <div>
+    <div className="flex flex-col justify-center items-center w-screen h-screen">
       <h1>Formulario para criar um documento</h1>
       <form onSubmit={handleSubmit} className="flex flex-col">
         <label htmlFor="nome">
